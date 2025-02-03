@@ -1,26 +1,33 @@
- # AKi Personal Finance Assitant
-    #### Video Demo:  <URL HERE>
-    #### Description:
-    The **Aki Personal Finance Assistant** is a Python-based web application designed to help users manange their finanances by tracking income, expenses, and calculate user return on investment (ROI) for their finanacial goals. The application integrates with the **Plaid API** to securely pull finanacial data such as transactions & income details for user's bank accounts., providing user with real-time insights into their financial health.
+# AKi Personal Finance Assistant
+#### Video Demo: <URL HERE>
 
-    Key Features:
-    - **User Authentication:** Secure login & account creation fucntionality via Plaid Link.
-    - **Budget Tracking:** Users can input, update, & categorize spending transactiosn.
-    - **Income Tracking:** Plaid API fetches income data & user ROI is calculated.
-    - **Transaction Management:** Ability for users to add, edit, and remove financial transactions.
+#### Description:
+The **AKi Personal Finance Assistant** is a Python-based web application designed to help users manage their finances by tracking income, expenses, and calculating user return on investment (ROI) for their financial goals. The application integrates with the **Plaid API** to securely pull financial data such as transactions & income details for user's bank accounts, providing users with real-time insights into their financial health.
 
-    This application uses **Flask** for backend and **SQLAlchemy** for data storage, providing an efficient & scalable solution for manging personal finance.
+#### Key Features:
+- **User Authentication:** Secure login & account creation functionality via Plaid Link.
+- **Budget Tracking:** Users can input, update, & categorize spending transactions.
+- **Income Tracking:** Plaid API fetches income data & user ROI is calculated.
+- **Transaction Management:** Ability for users to add, edit, and remove financial transactions.
 
-    Technologies Used:
-    - Python
-    - Flask (Web Framework)
-    - SQLAlchemy (ORM for database)
-    - Plaid API (Financial Data Integration)
-    - Bootstrap (UI/UX Design)
-    - Jinja2 (HTML Templating)
-    - unittest (Testing Framework)
+This application uses **Flask** for backend and **SQLAlchemy** for data storage, providing an efficient & scalable solution for managing personal finance.
 
-    ---
+#### Technologies Used:
+- Python
+- Flask (Web Framework)
+- SQLAlchemy (ORM for database)
+- Plaid API (Financial Data Integration)
+- Bootstrap (UI/UX Design)
+- Jinja2 (HTML Templating)
+- unittest (Testing Framework)
+
+---
+
+#### Installation:
+
+1. Clone this repository:
+   ```bash
+   git clone <REPOSITORY_URL>
 
     #### Installation:
 
