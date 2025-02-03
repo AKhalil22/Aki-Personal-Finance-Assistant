@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Login Page{% endblock %}
+
+{% block content %}
+    <!-- Flash/Popup Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+<style>
+    .signup-container {
+      background: var(--Background-Dark, #2f1893);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font: 500 18px/1 DM Sans, sans-serif;
+    }
+
+    .signup-wrapper {
+      display: flex;
+      flex-direction: column;
+      background-blend-mode: normal;
+      position: relative;
+      min-height: 770px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 80px;
+    }
+
+    .background-image {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .signup-form {
+      position: relative;
+      border-radius: 10px;
+      background: var(--Colors-White, #fff);
+      display: flex;
+      margin-bottom: -24px;
+      width: 430px;
+      max-width: 100%;
+      flex-direction: column;
+      padding: 34px 50px;
+    }
+
+    .signup-title {
+      color: var(--Colors-Heading, #1e0e62);
+      text-align: center;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.4px;
+      align-self: center;
+    }
+
+    .form-input {
+      border-radius: 100px;
+      border: 2px solid var(--Colors-Grey, #ebeaed);
+      margin-top: 20px;
+      color: var(--Colors-Text, rgba(21, 20, 57, 0.4));
+      padding: 12px 24px;
+    }
+
+    .form-input:first-of-type {
+      margin-top: 45px;
+    }
+
+    .submit-button {
+      border-radius: 100px;
+      background: var(--Action-Primary, #25dac5);
+      margin-top: 24px;
+      color: var(--Colors-White, #fff);
+      text-align: center;
+      padding: 12px 70px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .form-footer {
+      display: flex;
+      gap: 9px;
+      text-align: right;
+      line-height: 2;
+      margin: 25px 25px 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+
+  <div class="signup-container">
+    <div class="signup-wrapper">
+
+      <!-- Set background image -->
+      <img
+        loading="lazy"
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/45f5045947fa737769881441403816f7e388fb875bedc88a51153db456ebabfb?placeholderIfAbsent=true&apiKey=d5339584394749d1a5c5c5c523814a3f"
+        class="background-image"
+        alt=""
+      />
+
+      <!-- Create a login form to retrieve username & password -->
+      <form method="POST" action="/login" class="signup-form">
+        <h1 class="signup-title">Get Started</h1>
+
+        <!-- Email input -->
+        <input type="email" name="email" class="form-input" placeholder="Your Email" x required />
+
+        <!-- Password input -->
+        <input type="password" name="password" class="form-input" placeholder="Your Password" aria-label="Your Password" required />
+
+        <button type="submit" class="submit-button">Proceed</button>
+        <div class="form-footer"></div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}View All User{% endblock %}
+{% block content %}
+    {% for item in users %}
+        <p>ID: {{item.id}}</p>
+        <p>Name: {{item.name}}, Email: {{item.email}}, Password: {{item.password}}</p>
+        <p>Income: {{item.income}}, Expenses: {{item.expenses}}, Cashflow: {{item.cashflow}}</p>
+        <p>Plaid User ID: {{item.plaid_user_id}}, User Token: {{item.plaid_user_token}}, Latest Cursor: {{item.latest_cursor}}</p>
+        <p>User Connections: {{item.plaid_connections}}</p>
+    {% endfor %}
+    {% for item in transactions %}
+        <p>Transaction ID: {{item.transaction_id}}, User Id: {{item.user_id}}, User: {{item.user}}, Acccount ID: {{item.account_id}}</p>
+        <p>Date: {{item.date}}, Description: {{item.description}}, Category: {{item.category}}, Amount: {{item.amount}}</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Financial Dashboard</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif
+            }
+
+            .dashboard {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                grid-template-rows: auto auto;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .transactions {
+                grid-column: 1/2;
+                background-color: #ffffff;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .transactions h3 {
+                margin-bottom: 10px;
+            }
+
+            .transactions ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .transactions li {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .chart {
+                grid-column: 2/3;
+                grid-row: 1/2;
+                background-color: #ffffff;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .balance {
+                grid-column: 2/3;
+                grid-row: 2/3;
+                background-color: #ffffff;
+                padding: 15px;
+                border-radius: 10px;
+                text-align: center;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .balance p {
+                margin: 5px 0;
+            }
+
+            .greenText {
+                color: green;
+                font-weight: bold;
+            }
+
+            .transactionButton {
+               aspect-ratio: 1;
+               object-fit: contain;
+               object-position: center;
+               max-width: 30px;
+               max-height: 30px;
+               height: 100%;
+               cursor: pointer;
+            }
+
+            .transactionButton-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: 30px; /* Spacing from the heading */
+            }
+
+            .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px; /* Spacing between the header and list */
+            }
+        </style>
+    </head>
+
+    {% extends "base.html" %}
+    {% block content %}
+
+     <!-- Flash/Popup Messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p>{{msg}}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <body>
+        <h2>Welcome back, {{name}}</h2>
+
+        <div class="dashboard">
+            <div class="transactions">
+                <div class="container">
+                    <h3>Recent Transactions</h3>
+
+                    <!-- View Transactions -->
+                    <div class="transactionButton-wrapper">
+
+                        <img loading="lazy"
+                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f9b870ae6d562c680d5e61da0a5880078a8ef6b88c28df734d302c2c3ac7f75?placeholderIfAbsent=true&apiKey=d5339584394749d1a5c5c5c523814a3f"
+                            alt=""
+                            class="transactionButton"
+                            type="button"
+                            onclick="window.location.href='{{transactions_redirect}}'"/>
+                    </div>
+                </div>
+
+
+                <ul id="transactions-list">
+                    <script>
+                        // Fetch latest transaction data
+                        fetch("/expenses").then(response => response.json()).then(data => {
+                            // Debug
+                            console.log(data);
+
+                            // Limit # of Transactions loaded
+                            let transactionAmountLoad = 12
+                            if (data.length < 12) {
+                                transactionAmountLoad = data.length;
+                            }
+
+                            // Populate unorder list with latest fetched transaction data
+                            for (let i = transactionAmountLoad; i >= 0; i--) {
+                                // Parsing needed JSON variables
+                                let date = data[i].date;
+                                let description = data[i].description;
+                                let amount = data[i].amount;
+
+                                // Create new transaction list element
+                                const newTransactionElement = document.createElement("li");
+
+                                // Create span for the amount
+                                const amountSpan = document.createElement("span");
+                                amountSpan.classList.add("greenText"); // Apply styling class to span
+                                amountSpan.textContent = `$${amount}`; // Set text context
+
+                                // Set description text for list element
+                                newTransactionElement.textContent = description;
+
+                                // Append the span inside the <li>
+                                newTransactionElement.appendChild(amountSpan);
+
+                                // Add list element
+                                document.querySelector('#transactions-list').appendChild(newTransactionElement);
+                            }
+                        })
+                    </script>
+                </ul>
+            </div>
+
+            <div class="chart">
+                <h3>Incomes vs Expenses</h3>
+                <div id="pieChart">
+                    <!-- Add Plotly JS -->
+                    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                    <script type="text/javascript">
+                        // Initalize pie chart
+                        var pie = {{pie | safe}};
+                        console.log(pie)
+
+                        // Adjust pie size
+                        //pie.layout.width = 500;
+                        //pie.layout.height = 500;
+
+                        // Render chart
+                        Plotly.plot('pieChart', pie.data, pie.layout)
+                    </script>
+                </div>
+            </div>
+
+            <div class="balance">
+                <h3>Total Balance</h3>
+                <p id="cashflow-value"></p>
+                <p id="cashflow-precent" class="greenText"></p>
+
+                <!--Assign current user cashflow value & precentage-->
+                <script type="text/javascript">
+                    let cashflow = {{cashflow_value}};
+                    let formattedNumber = cashflow.toLocaleString('en-US', {
+                        style: 'currency', currency: 'USD'
+                    });
+                    document.getElementById('cashflow-value').textContent = formattedNumber;
+
+                    let cashprecent = {{cashflow_percentage}}
+                    let formattedPercent = new Intl.NumberFormat('en-US', {
+                        style: 'percent', minimumFractionDigits: 2
+                    }).format(cashprecent);
+                    document.getElementById('cashflow-precent').textContent = (formattedPercent);
+
+                </script>
+            </div>
+
+        </div>
+    </body>
+</html>
+
+
+{% endblock %}

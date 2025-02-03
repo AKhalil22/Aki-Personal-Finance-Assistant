@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% block title %}Getting Started Page{% endblock %}
+
+{% block content %}
+
+    <!-- Flash/Popup Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Create New Account</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <style>
+            .hero-container {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                min-height: 850px;
+                width: 100%;
+                align-items: center;
+                padding: 85px 70px 163px;
+            }
+
+            .hero-background {
+                position: absolute;
+                inset: 0;
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+
+            .content-wrapper {
+                position: relative;
+                inset: 0;
+                height: 100%;
+                width: 100%;
+                max-width: 1170px;
+                align-items: center;
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .text-content {
+                align-self: stretch;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                font-family: DM Sans, sans-serif;
+                font-weight: 500;
+            }
+
+            .brand-name {
+                text-align: center;
+                font-size: 24px;
+                font-weight: 700px;
+                letter-spacing: -0.29px;
+                margin-top: 142px;
+            }
+
+            .main-heading {
+                text-align: center;
+                font-size: 72px;
+                font-weight: 700;
+                line-height: 1;
+                letter-spacing: -1px;
+                margin-top: 20px;
+                margin-bottom: 65px;
+                color: black;
+            }
+
+            .description {
+                text-align: center;
+                font-size: 22px;
+                line-height: 32px;
+                align-self: stretch;
+                margin-top: 27px;
+            }
+
+            .cta-button {
+                border-radius: 100px;
+                background: var(--Action-Secondary, #482be7);
+                margin-top: 59px;
+                width: 230px;
+                max-width: 100%;
+                font-size: 18px;
+                text-align: center;
+                line-height: 1;
+                padding: 17px 35px;
+                cursor: pointer;
+                border: none;
+                color: inherit;
+            }
+
+            .signup-form {
+                position: relative;
+                border-radius: 10px;
+                background: var(--Colors-White, #fff);
+                display: flex;
+                margin-bottom: -24px;
+                width: 430px;
+                max-width: 100%;
+                flex-direction: column;
+                padding: 34px 50px;
+            }
+
+            .title-form {
+                color: var(--Color-Heading, #1e0e62);
+                text-align: center;
+                font-size: 42px;
+                font-weight: 700;
+                line-height: 1;
+                letter-spacing: -0.4px;
+                align-self: center;
+            }
+
+            .input-form {
+                width: 100%;
+                border-radius: 100px;
+                border: 2px solid var(--Colors-Grey, #ebeaed);
+                margin-top: 20px;
+                color: var(--Colors-Text, rgba(21, 20, 57, 0.4));
+                padding: 12px 24px;
+                align-items: center;
+            }
+
+            .submit-button {
+                width: 100%;
+                border-radius: 100px;
+                background: var(--Action-Primary, #25dac5);
+                margin-top: 24px;
+                color: var(--Colors-White, #fff);
+                text-align: center;
+                padding: 12px 70px;
+                border: none;
+                cursor: pointer;
+            }
+
+            .button-x2-modified {
+                max-width: 48%;
+                padding: 5%;
+            }
+
+            .form-stage {
+                display: none;
+            }
+
+            .form-stage.active {
+                display: block;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class = "hero-container">
+            <img loading = "lazy"
+            src = "https://static.wixstatic.com/media/11062b_783749a77f8e40c4a43646e255079331~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_90,enc_auto/11062b_783749a77f8e40c4a43646e255079331~mv2.jpg"
+            class = "hero-background" alt = "Mountains"/>
+
+            <div class = "content-wrapper">
+                <div class = "text-content">
+                    <h1 class = "main-heading">Setup Account</h1>
+
+                    <!-- POST/SEND new user account data form -->
+                    <form action="/create_new_user" method="POST" class="signup-form" id="multiStageForm">
+
+                        <!-- Stage 1: Get user personal info -->
+                        <div class="form-stage active" id=stage1>
+                            <h1 class="title-form">Personal Information</h1>
+
+                            <!-- User's first & last name -->
+                            <input type="text" id="first-name" name="first-name" class="input-form" placeholder="First Name" aria-label="First Name" required>
+                            <input type="text" id="last-name" name="last-name" class="input-form" placeholder="Last Name" aria-label="Last Name" required>
+
+                            <!-- Mobile Number -->
+                            <input type="tel" id="phone" name="phone" class="input-form" placeholder="123-4567-8901" aria-label="Phone Number" required>
+
+                            <!-- Submit first portion of form -->
+                            <button type="button" class="submit-button" onclick="nextStage(1)">Proceed</button>
+                        </div>
+
+                        <!-- Stage 2: Get user primary address -->
+                        <div class="form-stage" id="stage2">
+                            <h1 class="title-form">Primary Address</h1>
+
+                            <!-- Google autocomplete
+                            <input id="autocomplete" placeholder="Autocomplete your address" type="text"/>
+                            -->
+
+                            <input type="text" id="address-line" name="address-line" class="input-form" placeholder="Address Line" aria-label="Address Line" required>
+                            <input type="text" id="city" name="city" class="input-form" placeholder="City" aria-label="City" required>
+                            <input type="text" id="state-province" name="state-province" class="input-form" placeholder="State" aria-label="State/Province" required>
+                            <input type="text" id="zip-code" name="zip-code" class="input-form" placeholder="00000" aria-label="Zip/Postal Code" required>
+
+                            <!-- Country Dropdown -->
+                            <select id ="country" name="country" class="input-form" placeholder="Country" aria-label="Country" required>
+                                <option value="" disabled selection>Select a Country</option>
+                            </select>
+
+                            <!-- Input buttons -->
+                            <div class="d-flex justify-content-center flex-wrap gap-2">
+                                <button type="button" class="btn btn-primary submit-button button-x2-modified bg-info bg-gradient" onclick="prevStage(2)">Go Back</button>
+                                 <!-- Initalize link button -->
+                                <button type="submit" id="link-button" class="btn btn-primary submit-button button-x2-modified">Link Bank Account</button>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                    <!-- Google Places API (https://www.youtube.com/watch?v=c3MjU9E9buQ) -->
+                    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places
+                    &callback=initAutocomplete" async defer>
+                    </script>
+
+                    <script type="text/javascript">
+                        // List of countries for dropdown
+                        const countries = [];
+                        const countrySelect = document.getElementById("country");
+                        const option = document.createElement("option");
+                        option.value = "United States";
+                        option.textContent = "United States";
+                        countrySelect.appendChild(option);
+
+
+                        fetch('https://restcountries.com/v3.1/all')
+                            .then(response => response.json())
+                            .then(countries => {
+                                // Sort countries aphabetically
+                                countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+                                // Populate country dropdown
+                                const countrySelect = document.getElementById("country");
+                                countries.forEach(country => {
+                                    const option = document.createElement("option");
+                                    option.value = country.name.common;
+                                    option.textContent = country.name.common;
+                                    countrySelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching countries: ', error))
+
+                            // Google Places Autocomplete
+                        function initAutocomplete() {
+                            const input = document.getElementById("autocomplete");
+                            const options = {
+                                bounds: defaultBounds,
+                                componentRestrictions: { country: "us" },
+                                fields: ["address_components", "geometry", "icon", "name"],
+                                strictBounds: false,
+                            };
+
+                            // Create Autocomplete Service
+                            const autocomplete = new google.maps.places.Autocomplete(input, options);
+
+                            // Create Listner
+                            autocomplete.addListener("place_changed", onPlaceChanged)
+                        }
+
+                        // Event-Listener Function
+                        function onPlaceChanged() {
+                            var place = autocomplete.getPlace();
+
+                            if (!place.geometry) {
+                                // User didn't select prediction: Reset input field
+                                document.getElementById("autocomplete").placeholder = 'Autocomplete your address';
+                            } else {
+                                // Display details about valid location
+                                document.getElementById('address-line').innerHTML = place.name;
+                            }
+                        }
+
+                    </script>
+
+                    <!-- JavaScript functionality for form forward & back features -->
+                    <script type="text/javascript">
+                        // If user goes forward
+                        function nextStage(currentStage) {
+                            // Debug
+                            console.log("Next Stage Function Called By Stage: " + currentStage)
+
+                            // Get the current & next stage id's via currentStage parameter (int)
+                            const current = document.getElementById(`stage${currentStage}`); // DOM & Template Literals
+                            const next = document.getElementById(`stage${currentStage + 1}`);
+
+                            console.log("Current: " + current + " | Next: " + next)
+
+                            // Get all required feilds
+                            const inputs = current.querySelectorAll('input[required]');
+                            console.log(inputs.length);
+                            let requiredFilled = true; // Debounce
+
+                            // Iterate over each input feild
+                            for (let i = 0; i < inputs.length; i++) {
+                                if (!inputs[i].value) {
+                                    allFilled = false;
+                                    break;
+                                }
+                                allFilled = true;
+                            }
+
+                            console.log(allFilled);
+
+                            // Verfiy user has filled all required fields from current stage
+                            if (allFilled && current && next) {
+                                current.classList.remove("active"); // Make current stage invisible
+                                next.classList.add("active"); // Make next stage visible
+                            } else {
+                                alert("Please fill out all required fields.");
+                            }
+                        }
+
+                        // If user goes back
+                        function prevStage(currentStage) {
+                            console.log("Previous Stage Function Called By Stage: " + currentStage)
+
+                            const current = document.getElementById(`stage${currentStage}`);
+                            const prev = document.getElementById(`stage${currentStage - 1}`);
+
+                            console.log("Current: " + current + " | Previous: " + prev)
+
+                            if (current && prev) {
+                                current.classList.remove("active");
+                                prev.classList.add("active")
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+{% endblock %}

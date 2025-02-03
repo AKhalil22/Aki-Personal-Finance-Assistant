@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+<style>
+    .hero-container {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-height: 850px;
+      width: 100%;
+      align-items: center;
+      padding: 85px 70px 163px;
+    }
+
+    .hero-background {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .content-wrapper {
+      position: relative;
+      display: flex;
+      margin-bottom: -33px;
+      width: 100%;
+      max-width: 1170px;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .text-content {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: DM Sans, sans-serif;
+      font-weight: 500;
+    }
+
+    .brand-name {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.29px;
+      margin-top: 142px;
+    }
+
+    .main-heading {
+      text-align: center;
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -1px;
+      margin-top: 25px;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 24px;
+      line-height: 32px;
+      align-self: stretch;
+      margin-top: 27px;
+    }
+
+    .cta-button {
+      border-radius: 100px;
+      background: var(--Action-Secondary, #482be7);
+      margin-top: 59px;
+      width: 230px;
+      max-width: 100%;
+      font-size: 18px;
+      text-align: center;
+      line-height: 1;
+      padding: 17px 35px;
+      cursor: pointer;
+      border: none;
+      color: inherit;
+    }
+
+  </style>
+
+  <div class="hero-container">
+    <img
+      loading="lazy"
+      src="https://cdn.builder.io/api/v1/image/assets/TEMP/362f9c516178bab57872c141a6d2d49aff260a0e935bc0d3e94507a7090636c3?placeholderIfAbsent=true&apiKey=d5339584394749d1a5c5c5c523814a3f"
+      class="hero-background"
+      alt=""
+    />
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h1 class="brand-name">Aki</h1>
+        <h2 class="main-heading">AI Financial Assistant</h2>
+        <p class="description">
+          <b>Why Choose Aki?</b>
+        </p>
+        <ul>
+          <li><b>Personalized Visionary:</b> Understands your unique goals and aspirations.</li>
+          <li><b>Dynamic Algorithms:</b> Adapts to your changing needs in real time.</li>
+          <li><b>Daily Progress:</b> Helps you take small, consistent steps toward your best life.</li>
+        </ul>
+        <button id="link-button" class="cta-button">Link Account</button>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+        <script type="text/javascript">
+          (async function($) {
+            // Initialize the handler outside the click event (outer scope)
+            var handler;
+
+            // Create event for link button click
+            $('#link-button').on('click', async function(e) {
+
+              console.log("Link Button Clicked");
+
+              // Fetch link token via the /create_link_token route
+              var tokenResponse = await $.post("/create_link_token");
+              var user_email = tokenResponse.user_email;
+
+              // Ensure that link_token is available before initializing Plaid
+              if (tokenResponse && tokenResponse.link_token) {
+                console.log("Token Response:", tokenResponse, tokenResponse.link_token, user_email)
+
+                handler = Plaid.create({
+                  // Initialize Link with token
+                  token: tokenResponse.link_token,
+
+                  onLoad: function() {
+                    // Optional, called when Link loads
+                  },
+
+                  onSuccess: function(public_token, metadata) {
+                    // Send the public_token to your app server.
+                    // The metadata object contains info about the institution the
+                    // user selected and the account ID or IDs, if the
+                    // Account Select view is enabled.
+                    console.log("Public Token:", public_token)
+                    console.log("User Email:", user_email)
+                    console.log("Metadata:", metadata)
+                    $.post('/exchange_public_token', {
+                      link_token: tokenResponse.link_token,
+                      user_email: tokenResponse.user_email,
+                    }, function(response) {
+                      console.log("Backend Redirect Response:", response);
+                      // Redirect the user to the URL provided from response (user home page)
+                      window.location.href = '/user';
+                    });
+                  },
+
+                  onExit: function(err, metadata) {
+                    // The user exited the Link flow.
+                    if (err != null) {
+                      // The user encountered a Plaid API error prior to exiting.
+                      console.log("User encountered a Plaid API error.")
+                    }
+                    // metadata contains information about the institution
+                    // that the user selected and the most recent API request IDs.
+                    // Storing this information can be helpful for support.
+                  },
+
+                  onEvent: function(eventName, metadata) {
+                    // Optionally capture Link flow events, streamed through
+                    // this callback as your users connect an Item to Plaid.
+                    // For example:
+                    // eventName = "TRANSITION_VIEW"
+                    // metadata  = {
+                    //   link_session_id: "123-abc",
+                    //   mfa_type:        "questions",
+                    //   timestamp:       "2017-09-14T14:42:19.350Z",
+                    //   view_name:       "MFA",
+                    // }
+                  }
+                });
+
+                // Open Plaid Link once initialized
+                handler.open();
+              } else {
+                console.log("Error: Could not retrieve the link token.");
+              }
+            });
+          })(jQuery);
+        </script>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Inhert Index.html -->
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>My Transactions</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    </head>
+    <body>
+        <div class="transactions-container">
+            <h1>Transactions</h1>
+            <ul class="transaction-list">
+                {% for transaction in transactions %}
+                <li class="transaction-item">
+                    <div class="transaction-details">
+                        <div class="transaction-title-container">
+                            <!-- Title: Double click to edit -->
+                            <span class="transaction-title" data-id="{{transaction.id}}"
+                                ondblclick="editField(event, 'description')">{{transaction.description}}</span>
+
+                            <button class="delete-button" data-id="{{transaction.id}}">Delete</button>
+                        </div>
+                        <span class="transaction-date" data-id="{{transaction.id}}" ondblclick="editField(event, 'date')">{{transaction.formatted_date}}</span>
+                    </div>
+                    <div class="transaction-amount">
+                        <button class="transaction-category" data-id="{{transaction.id}}" ondblclick="editField(event, 'category')">{{transaction.category}}</button>
+                        <!-- Use formatNumber function to format money -->
+                        <span class="amount" data-id="{{transaction.id}}" ondblclick="editField(event, 'amount')">{{transaction.formatted_amount}}</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <button class="add-transaction-button">+</button>
+        </div>
+        <!-- Placing at bottom holds the script from executing until HTML loads -->
+        <script src="{{ url_for('static', filename='js/formatTransactions.js') }}" defer></script>
+    </body>
+</html>

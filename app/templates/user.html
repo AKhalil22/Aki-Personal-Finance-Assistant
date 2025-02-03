@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% block title %}User{% endblock %}
+{% block content %}
+
+ <!-- Flash/Popup Messages -->
+ {% with messages = get_flashed_messages() %}
+ {% if messages %}
+     {% for msg in messages %}
+         <p>{{msg}}</p>
+     {% endfor %}
+ {% endif %}
+{% endwith %}
+
+<style>
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+        justify-content: center;
+    }
+
+    .rounded-container {
+        border-radius: 36px;
+        background-color: rgba(255, 255, 255, 0.85);
+        display: flex;
+        min-height: 100px;
+        aspect-ratio: 1;
+        border: 1px solid rgba(236, 236, 236, 1);
+        justify-content: center;
+    }
+
+    .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div class="center-container">
+    <H4> Hello, {{name}} </H4>
+</div>
+
+<div class="center-container">
+    <div class="rounded-container" tabindex="0" id="pie-chart" style="width: 85%; height: 85%;">
+        <script type="text/javascript">
+            var pie = {{pie | safe}};
+
+            // Adjust Plotly Pie's size
+            pie.layout.width = 500;
+            pie.layout.height = 500;
+
+            Plotly.plot('pie-chart', pie.data, pie.layout).then(function() {
+
+                var clicked = false;
+                var debounce = false;
+                var pieChart = document.getElementById('pie-chart');
+
+                function showExpenses() {
+                    document.querySelector('.update-financials').style.display = 'none';
+                    document.getElementById('expenses-breakdown').style.display = 'block';
+
+                    // Preventative meaasure to ensure data isn't repopulated
+                    if (!debounce) {
+                        // Fetch data from the server
+                        fetch('/expenses').then(response => response.json()).then(data => {
+                            // Populate form fields with the fetched data
+                            console.log(data);
+                            for (let i = data.length - 1; i >= 0; i--) {
+                                console.log(data[i].description);
+                                document.querySelector('#expense-description').value = data[i].description;
+
+                                let category = data[i].category;
+                                if (category === null) {
+                                    category = "Other";
+                                }
+                                console.log(category);
+                                document.querySelector('#expense-category').value = category;
+
+                                console.log(data[i].amount);
+                                document.querySelector('#expense-amount').value = data[i].amount;
+                                expenseCount += 1;
+                                createExpense();
+                            }
+                        document.querySelector('#expense-description').value = null;
+                        document.querySelector('#expense-category').value = null;
+                        document.querySelector('#expense-amount').value = null;
+                        debounce = true;
+                    });
+                    }
+                }
+
+                function hideExpenses() {
+                    document.querySelector('.update-financials').style.display = 'block';
+                    document.getElementById('expenses-breakdown').style.display = 'none';
+                }
+
+                pieChart.on('plotly_click', function(data) {
+                    var pts = data.points;
+                    if (pts[0].label === 'Expenses' && !clicked) {
+                        clicked = true;
+                        showExpenses();
+                    } else if (pts[0].label === 'Expenses' && clicked) {
+                        clicked = false;
+                        hideExpenses();
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>
+
+
+<div class="center-container">
+    <p>{{cashflow_statment}}</p>
+</div>
+
+<!-- Update User's income, expenses, and financial goals -->
+<div class="center-container">
+    <div class="rounded-container" style="width: 85%; height: 35%;">
+        <form action="/user" method="POST" class="update-financials">
+            <input type="hidden" name="form_type" value="update_financials">
+                <p>Change Financial Pie:</p>
+                <div class="update-financials">
+                    <label for="income">Monthly Income:</label>
+                    <input type="number" name="income" id="income" value={{current_income}} required />
+                </div>
+                <div class="update-financials">
+                    <label for="expenses">Monthly Expenses:</label>
+                    <input type="number" name="expenses" id="expenses" value={{current_expenses}} required />
+                </div>
+                <div class="update-financials">
+                    <label for="cashflow">Desired Monthly Cash Flow:</label>
+                    <input type="number" name="cashflow" id="cashflow" value={{current_cashflow}} required />
+                </div>
+                <div class="update-financials">
+                    <input type="submit" value="Update Values" />
+                </div>
+        </form>
+    </div>
+</div>
+
+<!-- Expenses breakdown section -->
+<div class="center-container" id="expenses-breakdown" style="display:none;">
+    <!-- Your expenses breakdown content here -->
+    <p>Expenses Breakdown:</p>
+    <!-- Stack Horizontally -->
+    <form action="/user" method="POST" class="expenses-breakdown" id="expenses-breakdown-form">
+        <input type="hidden" name="form_type" value="expenses_breakdown">
+            <div class="center-container" style="display: inline-block; margin-right: 10px;">
+
+                <!-- Description -->
+                <label for="expense-description" style="display: inline-block; width: 90px;">Description:</label>
+                <input type="text" name="expense-description" id="expense-description" placeholder="e.g. Rent">
+
+                <!-- Categories -->
+                <label for="expense-category" style="display: inline-block; width: 72px;">Category:</label>
+                <select id="expense-category" name="expense-category">
+                    <option value="Housing">Housing</option>
+                    <option value="Food">Food</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Others">Others</option>
+                </select>
+
+                <!-- Amount -->
+                <label for="expense-amount" style="display: inline-block; width: 68px;">Amount:</label>
+                <input type="number" name="expense-amount" id="expense-amount" placeholder="e.g. 50">
+
+            </div>
+            <div class="button-group" style="display: inline-block; margin-right: 10px;">
+                <input type="submit" onclick="updateExpenses()" id="update-expense-button"/>
+                <button type="button" onclick="createExpense()" id="add-expense-button">Add Expense</button>
+            </div>
+    </form>
+</div>
+
+<!--JavaScript Functions-->
+<script>
+
+    let expenseCount = 0;
+
+    function updateExpense() {
+
+    }
+
+    function createExpense() {
+        // Select the expenses breakdown form & add new expense button
+        let expenseSection = document.querySelector('#expenses-breakdown-form');
+        let addExpenseButton = document.querySelector('#add-expense-button');
+
+        // Select the input fields
+        let description = document.querySelector('#expense-description');
+        let category = document.querySelector('#expense-category');
+        let amount = document.querySelector('#expense-amount');
+
+        /* Check if any field is empty
+        if (!description.value || !category.value || !amount.value) {
+            alert("Please fill in all fields before adding an expense.");
+            return;
+        }
+        */
+
+        // Clone the section
+        let newExpenseSection = expenseSection.cloneNode(true);
+
+        // Hide the addExpenseButton & updateExpenseButton Update in the cloned section
+        newExpenseSection.querySelector('#update-expense-button').style.display = 'none';
+        newExpenseSection.querySelector('#add-expense-button').style.display = 'none';
+
+        // Create a remove button
+        let removeButton = document.createElement('button');
+        removeButton.textContent = "Remove";
+        removeButton.onclick = function() {
+            newExpenseSection.remove();
+        };
+
+        // Append the remove button to the cloned section
+        newExpenseSection.appendChild(removeButton);
+
+        // Append the cloned section to the parent container
+        document.querySelector('#expenses-breakdown').appendChild(newExpenseSection);
+
+        console.log(expenseCount);
+    }
+
+</script>
+
+{% endblock %}

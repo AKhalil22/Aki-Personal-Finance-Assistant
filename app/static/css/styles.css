@@ -1,0 +1,135 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.transaction-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eaeaea;
+    transition: background 0.2s ease;
+}
+
+.transaction-item:hover {
+    background: #f9f9f9;
+}
+
+.transaction-details { /* 🔍 */
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-title-container {
+    position: relative;
+    display: flex; /* Align title & button horizontally */
+    align-items: center;
+    width: 100%; /* Adjusts width based on content */
+}
+
+.transaction-title {  /* 🔍 */
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    flex: 1;
+}
+
+.transaction-title-container:hover .delete-button { /* 🔍 */
+    display: inline-block;
+    transition: background-color 0.5s;
+}
+
+.delete-button { /* 🔍 - Delete button gone*/
+    display: none;
+    top: 0;
+    margin-left: 20px;
+    padding: 5px 20px;
+    font-size: 12px;
+    color: white;
+    background-color: red;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: darkred;
+}
+
+.transaction-date {
+    font-size: 12px;
+    color: #888;
+}
+
+.transaction-amount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.transaction-category {
+    background-color:  #8b5cf6;
+    color: white;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    border: none;
+    margin-bottom: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+transaction-category:hover {
+    background-color: indigo;
+}
+
+.amount {
+    font-weight: bold;
+    font-size: 16px;
+    color: #c52f4c; /* Change */
+}
+
+.add-transaction-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: #00b894;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+.add-transaction-button:hover {
+    background-color: #008f68;
+}
+
