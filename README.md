@@ -28,23 +28,29 @@ This application uses **Flask** for backend and **SQLAlchemy** for data storage,
 1. Clone this repository:
    ```bash
    git clone <REPOSITORY_URL>
+   ```
 
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-2. Install dependencies
-pip install -r requirements.txt
+3. Set up environmental variables (e.g., Plaid API keys):
+   - Might need to sign up for Plaid API & change configuration API keys:
+     ```python
+     api_key = {
+         "clientId": "",
+         "secret": ""
+     }
+     ```
 
-3. Set up enviormental variables (e.g. Plaid API keys):
-- Might need to sign up for Plaid API & change configuration API keys:
-    api_key = {
-    "clientId": "",
-    "secret": ""
-  }
+4. Run:
+   ```bash
+   python project.py
+   ```
 
-4. Run: python project.py
+---
 
-TODO:
-- Add more detailed unit tests.
-- Improve UI/UX design.
-- Add multi-user support.
-- Expand budgeting features.
-
+#### TODO:
+- [ ] Integrate Google Places API for auto-filling sign-up.
+- [ ] Implement AI budgeting features.
