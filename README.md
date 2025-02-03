@@ -29,27 +29,22 @@ This application uses **Flask** for backend and **SQLAlchemy** for data storage,
    ```bash
    git clone <REPOSITORY_URL>
 
-    #### Installation:
 
-    1. Clone this repository:
-      ```back
-      git clone <REPOSITORY_URL>
+2. Install dependencies
+pip install -r requirements.txt
 
-    2. Install dependencies
-      pip install -r requirements.txt
+3. Set up enviormental variables (e.g. Plaid API keys):
+- Might need to sign up for Plaid API & change configuration API keys:
+    api_key = {
+    "clientId": "",
+    "secret": ""
+  }
 
-    3. Set up enviormental variables (e.g. Plaid API keys):
-      - Might need to sign up for Plaid API & change configuration API keys:
-          api_key = {
-          "clientId": "",
-          "secret": ""
-        }
+4. Run: python project.py
 
-     4. Run: python project.py
-
-    TODO:
-    - Add more detailed unit tests.
-    - Improve UI/UX design.
-    - Add multi-user support.
-    - Expand budgeting features.
+TODO:
+- Add more detailed unit tests.
+- Improve UI/UX design.
+- Add multi-user support.
+- Expand budgeting features.
 
