@@ -35,14 +35,12 @@ This application uses **Flask** for backend and **SQLAlchemy** for data storage,
    pip install -r requirements.txt
    ```
 
-3. Set up environmental variables (e.g., Plaid API keys):
-   - Might need to sign up for Plaid API & change configuration API keys:
-     ```python
-     api_key = {
-         "clientId": "",
-         "secret": ""
-     }
-     ```
+3. Set up environmental variables:
+- Plaid API Keys: You will need to sign up for a Plaid account to obtain your [API keys](https://dashboard.plaid.com/developers/keys). Once you have your keys, set them in your .env file as follows:
+  ```.dotenv
+  PLAID_CLIENT_ID=your_client_id
+  PLAID_SECRET=your_secret
+  ```
 
 4. Run:
    ```bash
