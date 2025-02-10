@@ -60,7 +60,7 @@ configuration = plaid.Configuration(
     }
 )
 
-# Load/Initialize the enviornment variables
+# Load/Initialize the environment variables
 api_client = ApiClient(configuration)
 plaid_client = plaid_api.PlaidApi(api_client)
 
