@@ -27,7 +27,7 @@ This application uses **Flask** for backend and **SQLAlchemy** for data storage,
 
 1. Clone this repository:
    ```bash
-   git clone <REPOSITORY_URL>
+   git clone https://github.com/AKhalil22/Aki-Personal-Finance-Assistant.git
    ```
 
 2. Install dependencies:
