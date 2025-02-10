@@ -1,8 +1,8 @@
-Any pip-installable libraries that your project requires must be listed (one per line):
+# Any pip-installable libraries that your project requires must be listed (one per line):
 
-pip install flask # Front/Back-end
-pip install SQLAlchemy
-pip install -U Flask-SQLAlchemy # Database storage
-pip install plotly==5.24.1 # Pie chart creation
-pip install plaid-python # Bank account integration (load transaction history)
-pip install validator-collection # Email verification
+flask # Front/Back-end
+SQLAlchemy
+Flask-SQLAlchemy>=2.5.1 # Database storage
+plotly==5.24.1 # Pie chart creation
+plaid-python # Bank account integration (load transaction history)
+validator-collection # Email verification

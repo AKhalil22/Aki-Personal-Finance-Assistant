@@ -220,8 +220,7 @@ def exchange_public_token():
 
         for public_token in public_tokens:
 
-            print(f"Exchanging Public Token ({
-                  public_token}) via exchange_public_token()")
+            print(f"Exchanging Public Token ({public_token}) via exchange_public_token()")
 
             # Call Plaid API
             exchange_request = ItemPublicTokenExchangeRequest(
