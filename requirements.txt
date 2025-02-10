@@ -6,3 +6,4 @@ Flask-SQLAlchemy>=2.5.1 # Database storage
 plotly==5.24.1 # Pie chart creation
 plaid-python # Bank account integration (load transaction history)
 validator-collection # Email verification
+python-dotenv # .env File

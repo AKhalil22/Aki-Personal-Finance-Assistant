@@ -1,6 +1,7 @@
 # Defining app's routes (e.g. home, login, ...)
 # POST = Sending to Server
 # GET = Recieving from Server
+import os
 
 # Imports - Flask, Plotly, SQLite, Random, datetime
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash, jsonify
@@ -37,19 +38,29 @@ from plaid.model.country_code import CountryCode
 from plaid.model.products import Products
 from plaid import ApiClient
 
+# Imports - File Type: .env
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 # Flask
 main = Blueprint("main", __name__)
+
+# Fetch Plaid API keys from .env
+PLAID_CLIENT_ID = os.getenv('PLAID_CLIENT_ID')
+PLAID_SECRET = os.getenv('PLAID_SECRET')
 
 # Set up Plaid API client configuration
 configuration = plaid.Configuration(
     host=plaid.Environment.Sandbox,  # Sandbox environment
     api_key={
-        "clientId": "67671f77ec5d8b0026b53248",
-        "secret": "07f24d6c85c5534b4c7e074bbe85c5"
+        "clientId": PLAID_CLIENT_ID,
+        "secret": PLAID_SECRET
     }
 )
 
-# Load/Intialize the enviorment variables
+# Load/Initialize the enviornment variables
 api_client = ApiClient(configuration)
 plaid_client = plaid_api.PlaidApi(api_client)
 
