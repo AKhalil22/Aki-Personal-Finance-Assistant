@@ -1,12 +1,13 @@
 # Defining app's routes (e.g. home, login, ...)
 # POST = Sending to Server
-# GET = Recieving from Server
+# GET = Receiving from Server
+
 import os
 
 # Imports - Flask, Plotly, SQLite, Random, datetime
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash, jsonify
 from app.models import User, Transaction
-from app.helpers import validate_login, create_new_user_account, create_new_expense, get_cashflow_difference, create_pie, update_transaction_in_db, get_latest_cursor, update_latest_cursor, apply_transaction_updates
+from app.helpers import validate_login, create_new_user_account, get_cashflow_difference, create_pie, update_transaction_in_db, get_latest_cursor, update_latest_cursor, apply_transaction_updates
 from app import db
 import random # For fake data
 import datetime # Converting transaction dates
@@ -71,7 +72,7 @@ fake_data = True
 # Step 0: Create new user alongside their unique token
 @main.route('/create_new_user', methods=["POST"])
 def create_new_user():
-    # Fetch user from the seession based off email
+    # Fetch user from the session based off email
     user = User.query.filter_by(email=session["user"]).first()
 
     # Edge Case
@@ -116,7 +117,7 @@ def create_new_user():
         user_id = response['user_id']
         user_token = response['user_token']
 
-        print("create_new_user() route reponse: ", response)
+        print("create_new_user() route response: ", response)
 
         # Update user account & commit to database
         user.plaid_user_id = user_id
@@ -192,7 +193,7 @@ item_id = None
 # Step 2: Server requests a Link token from PLAID
 @main.route('/exchange_public_token', methods=['POST'])
 def exchange_public_token():
-    # Recieve link token from frontend & retrieve API object from /link/token/get endpoint
+    # Receive link token from frontend & retrieve API object from /link/token/get endpoint
     try:
         link_token = request.form['link_token']
         link_token_request = LinkTokenGetRequest(link_token=link_token)
@@ -202,7 +203,7 @@ def exchange_public_token():
         print("Error occurred while calling LinkTokenGetRequest from @exchange_public_token():", e)
         return jsonify({"error": "Failed to retrieve public tokens from link token"})
 
-    # Get the each public token from the multi-item link
+    # Get each public token from the multi-item link
     public_tokens = []
 
     for session in link_token_response.get('link_sessions', []):
@@ -305,10 +306,10 @@ def sync_transactions(access_token, user_id):
         update_latest_cursor(user, access_token, cursor)
         apply_transaction_updates(user_id, added, modified, removed)
 
-        return jsonify({"message": "Transactions synchronized sucessfully!"}), 200
+        return jsonify({"message": "Transactions synchronized successfully!"}), 200
 
     except Exception as e:
-        print(f"@sync_transacions - Error: {str(e)}")
+        print(f"@sync_transactions - Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 # Get user's income
@@ -429,8 +430,8 @@ def login():
             session.permanent = True  # Allows the user to stay logged in by default for 5 days
             session['user'] = email  # Replace with database's unique int
 
-            # If email dosen't already exist in the database
-            # create new user account, then intialize Plaid link
+            # If email doesn't already exist in the database
+            # create new user account, then initialize Plaid link
             if create_new_user_account(email, password):
                 print("Created new user! - From routes: login()")
                 # Load get started page to start link process
@@ -450,7 +451,7 @@ def login():
         if "user" in session:
             flash("Already Logged In!")
             return redirect(url_for("main.user"))
-        # Outerwise redirect the user to login page
+        # Otherwise redirect the user to login page
         return render_template("login.html")
 
 
@@ -490,7 +491,7 @@ def user():
         current_user = User.query.filter_by(email=session["user"]).first()
         print("@user - Current User:", current_user)
 
-        # Get the each access tokens & cursors for each linked item
+        # Get each access tokens & cursors for each linked item
         user_access_tokens = []
         user_latest_cursors = []
 
@@ -509,7 +510,7 @@ def user():
         print("@user - Latest Cursors:", user_latest_cursors)
 
     except Exception as e:
-        print("@user - Error occured retrieving user access tokens or cursors:", e)
+        print("@user - Error occurred retrieving user access tokens or cursors:", e)
 
     # Check if user has Plaid access tokens
     if user_access_tokens:
@@ -517,7 +518,7 @@ def user():
             for index_key, access_token in enumerate(user_access_tokens):
                 # Debug: print("Accessing User access token:", access_token)
 
-                # Intialize cursor corresponding to access_token
+                # Initialize cursor corresponding to access_token
                 latest_cursor = user_latest_cursors[index_key]
 
                 # Debug: print("Retrieving User cursor", latest_cursor)
@@ -550,7 +551,7 @@ def user():
             cashflow_value = cashflow_value,
             cashflow_percentage = cashflow_percentage,
             transactions_redirect = "/transactions"
-            # cashflow_statment=cashflow_statment
+            # cashflow_statement=cashflow_statement
         )
 
 
@@ -566,7 +567,7 @@ def transactions():
 
     # Attempt to extract JSON data from response
     try:
-        # Built in Flask function "get_json()" to parse response
+        # Built-in Flask function "get_json()" to parse response
         transactions = expense_response.get_json()
         # Debug: print("@transactions - Parsed Transactions:", transactions)
     except Exception as e:
